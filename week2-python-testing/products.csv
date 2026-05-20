@@ -1,0 +1,6 @@
+product_id,name,category,price,active
+101,Wireless Mouse,electronics,25.0,True
+102,Mechanical Keyboard,electronics,90.0,True
+103,Coffee Mug,home,8.5,True
+104,Old Headphones,electronics,40.0,False
+105,Notebook,office,3.0,True

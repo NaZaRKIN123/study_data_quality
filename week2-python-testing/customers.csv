@@ -1,0 +1,8 @@
+customer_id,email,signup_date,country,status
+1,anna@example.com,2024-01-15,PL,active
+2,ben@example.com,2024-02-03,US,active
+3,carla@example.com,2024-02-20,,active
+4,dan@example.com,2024-03-01,DE,churned
+5,,2024-03-12,PL,active
+6,eve@example.com,2024-04-04,UA,
+7,frank@example.com,2024-04-04,UA,active
