@@ -689,7 +689,7 @@ Don't peek at answers. Score: 8/10+ = ready for Week 7. 5–7 = re-review the we
 - The decision rule: if you're writing the same singular test 3+ times with different inputs, refactor into a custom generic test. Place it in `tests/generic/` or `macros/`.
 - For complex multi-table reconciliation (like "order total equals sum of items"), singular tests are usually clearer than trying to parameterize.
 
-*Likely follow-up:* "What's a custom generic test, and when have you written one?" (Answer: a Jinja `{% test xyz(model, column_name) %}...{% endtest %}` block. Real-world example: `test_no_empty_strings(model, column_name)` to extend `not_null` to also catch empty strings.)
+*Likely follow-up:* "What's a custom generic test, and when have you written one?" (Answer: a Jinja `test xyz(model, column_name) ... endtest` block. Real-world example: `test_no_empty_strings(model, column_name)` to extend `not_null` to also catch empty strings.)
 
 ### IQ4. "How does dbt source freshness work, and why does it matter?"
 
