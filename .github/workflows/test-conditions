@@ -1,0 +1,63 @@
+name: Boolean input probe
+
+on:
+  push:                    # stand-in for `schedule`: no inputs provided
+  workflow_dispatch:
+    inputs:
+      use-tests-from-main:
+        type: boolean
+        required: false
+        default: true
+        description: Tick / untick to compare both dispatch cases
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Evaluate every variant
+        env:
+          EVENT: ${{ github.event_name }}
+          RAW_INPUTS: "${{ inputs.use-tests-from-main }}"
+          RAW_EVENT_INPUTS: "${{ github.event.inputs.use-tests-from-main }}"
+          EQ_FALSE: "${{ inputs.use-tests-from-main == false }}"
+          NE_TRUE: "${{ inputs.use-tests-from-main != true }}"
+          NOT_X: "${{ !inputs.use-tests-from-main }}"
+          EQ_STR_TRUE: "${{ github.event.inputs.use-tests-from-main == 'true' }}"
+          EQ_STR_FALSE: "${{ github.event.inputs.use-tests-from-main == 'false' }}"
+          TERNARY: >-
+            ${{ (github.event_name == 'workflow_dispatch' && inputs.use-tests-from-main == false)
+                && github.ref_name || 'main' }}
+          NAIVE_TERNARY: >-
+            ${{ inputs.use-tests-from-main == false && github.ref_name || 'main' }}
+        run: |
+          # the bash approach, for comparison
+          if [ "$RAW_INPUTS" = "false" ]; then BASH_REF="${GITHUB_REF_NAME}"; else BASH_REF="main"; fi
+
+          {
+            echo "## event: \`$EVENT\`"
+            echo
+            echo "| expression | result |"
+            echo "| --- | --- |"
+            echo "| inputs.x (raw) | \`$RAW_INPUTS\` |"
+            echo "| github.event.inputs.x (raw) | \`$RAW_EVENT_INPUTS\` |"
+            echo "| inputs.x == false | \`$EQ_FALSE\` |"
+            echo "| inputs.x != true | \`$NE_TRUE\` |"
+            echo "| !inputs.x | \`$NOT_X\` |"
+            echo "| github.event.inputs.x == 'true' | \`$EQ_STR_TRUE\` |"
+            echo "| github.event.inputs.x == 'false' | \`$EQ_STR_FALSE\` |"
+            echo "| **guarded ternary** | \`$TERNARY\` |"
+            echo "| **naive ternary** (no event check) | \`$NAIVE_TERNARY\` |"
+            echo "| **bash resolve** | \`$BASH_REF\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Step-level if - runs only when box unticked
+        if: ${{ inputs.use-tests-from-main == false }}
+        run: echo "reached (== false)"
+
+      - name: Step-level if - runs unless box ticked
+        if: ${{ inputs.use-tests-from-main != true }}
+        run: echo "reached (!= true)"
+
+      - name: Old string style - runs only on == 'false'
+        if: ${{ github.event.inputs.use-tests-from-main == 'false' }}
+        run: echo "reached (== 'false')"
