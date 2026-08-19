@@ -17,17 +17,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: only if false
-        if: ${{ inputs.use-tests-from-main == false }}
+        if: ${{ inputs.use-tests-from-main == 'false' }}
         run: echo "reached (== false)"
 
       - name: only if true
-        if: ${{ inputs.use-tests-from-main == true }}
+        if: ${{ inputs.use-tests-from-main == 'true' }}
         run: echo "reached (== true)"
 
       - name: only if not false
-        if: ${{ inputs.use-tests-from-main != false }}
+        if: ${{ inputs.use-tests-from-main != 'false' }}
         run: echo "reached (!= false)"
 
       - name: only if not true
-        if: ${{ inputs.use-tests-from-main != true }}
+        if: ${{ inputs.use-tests-from-main != 'true' }}
         run: echo "reached (!= true)"
